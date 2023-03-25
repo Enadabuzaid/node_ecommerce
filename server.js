@@ -23,6 +23,15 @@ if (process.env.NODE_ENV === 'devlopment') {
 // Mount Routes
 app.use('/api/v1/categories', categoryRoute);
 
+app.all('*', (req, res, next) => {
+  next(new ApiError(`Can't find this route: ${req.originalUrl}`, 400));
+});
+
+// Global error handling middleware
+app.use((err,req,res,next) =>{
+  res.status(400).json({err});
+});
+
 const PORT = process.env.PORT || 8000;
 app.listen(PORT, () => {
   console.log(`App running running on port ${PORT}`);
